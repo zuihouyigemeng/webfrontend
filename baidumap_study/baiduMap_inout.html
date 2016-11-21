@@ -1,0 +1,111 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+<title>Hello, World</title>  
+
+
+
+</script>
+</head>  
+ 
+<body>  
+ 
+<script type="text/javascript"> 
+
+
+
+function rayCasting(p, poly) {
+  var px = p.x,
+      py = p.y,
+      flag = false
+	  
+  for(var i = 0, l = poly.length, j = l - 1; i < l; j = i, i++) {
+    var sx = poly[i].x,
+        sy = poly[i].y,
+        tx = poly[j].x,
+        ty = poly[j].y
+
+    // 点与多边形顶点重合
+    if((sx === px && sy === py) || (tx === px && ty === py)) {
+      return 'on'
+    }
+
+    // 判断线段两端点是否在射线两侧
+    if((sy < py && ty >= py) || (sy >= py && ty < py)) {
+      // 线段上与射线 Y 坐标相同的点的 X 坐标
+      var x = sx + (py - sy) * (tx - sx) / (ty - sy)
+
+      // 点在多边形的边上
+      if(x === px) {
+        return 'on'
+      }
+
+      // 射线穿过多边形的边界
+      if(x > px) {
+        flag = !flag
+      }
+    }
+  }
+
+  // 射线穿过多边形边界的次数为奇数时点在多边形内
+  return flag ? 'in' : 'out';
+}
+ 
+var ispoint = new Object()
+     //里面121.455854 31.255322
+	 ispoint.x=121.455854 
+	 ispoint.y=31.255322
+
+     //外面121.423083 31.203446
+     //ispoint.x=121.468502 
+	 //ispoint.y=31.238033 
+	 
+//var points = new Array(new Object())
+//var points = new Object()[]
+var arrPoints=new Array();
+var point=new Object();
+point.x = 121.461028 
+point.y = 31.261249
+arrPoints.push(point);
+
+point=new Object();
+point.x = 121.420209 
+point.y = 31.231611
+arrPoints.push(point);
+
+point=new Object();
+point.x = 121.435731 
+point.y = 31.199986
+arrPoints.push(point);
+
+
+point=new Object();
+point.x = 121.467927 
+point.y = 31.210364
+arrPoints.push(point);
+
+
+point=new Object();
+point.x = 121.47885 
+point.y = 31.228152
+arrPoints.push(point);
+
+
+point=new Object();
+point.x = 121.463902 
+point.y = 31.237045
+arrPoints.push(point);
+
+var ret=rayCasting(ispoint,arrPoints)
+console.log(ret);
+//console.log(arrPoints[3].x,arrPoints[3].y)
+
+
+</script>  
+<body>
+
+xxxx
+</body>  
+</html>

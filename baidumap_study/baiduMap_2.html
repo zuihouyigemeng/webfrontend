@@ -1,0 +1,146 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+<title>Hello, World</title>  
+<style type="text/css">  
+html{height:100%}  
+body{height:100%;margin:0px;padding:0px}  
+#container{height:100%}  
+</style>  
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=oCbw1Qz8ayXfZKlgDHKyfsWG"></script> 
+<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script> 
+
+</script>
+</head>  
+ 
+<body>  
+<div id="container"></div> 
+<script type="text/javascript">  
+
+bindDiv(1001,121.48, 31.22,3,12,58,4,2,5,65,76);
+
+var lngSpan = 121.48;    
+var latSpan = 31.22;  
+
+//折线画图
+var polyline = new BMap.Polyline([    
+   new BMap.Point(lngSpan, latSpan),    
+   new BMap.Point(lngSpan+0.02, latSpan+0.010),
+   new BMap.Point(lngSpan+0.03, latSpan+0.030)  
+ ],    
+ {strokeColor:"blue", strokeWeight:6, strokeOpacity:0.5}    
+);    
+//map.addOverlay(polyline);
+
+
+
+//map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+function bindDiv(deviceID,longitude,latitude,address_num,time,speed,engineRPM,batt_level,fuel_level_now,ign,licenseNumber)
+{
+	//var map = new BMap.Map("container_"+deviceID);
+        
+    //alert("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx---2");
+    //var map = new BMap.Map("trace");//xxxx
+    var map = new BMap.Map("container");//xxxx
+	
+	var gpsPoint = new BMap.Point(121.48, 31.22);  // 创建点坐标  
+	map.centerAndZoom(gpsPoint, 12);     
+	
+         //
+    //map.centerAndZoom("上海",11);      // 初始化地图,用城市名设置地图中心点
+	//arr.push(map); 
+	var opts = {type: BMAP_NAVIGATION_CONTROL_ZOOM }    
+	map.addControl(new BMap.NavigationControl(opts));
+	map.addControl(new BMap.ScaleControl());    
+	map.addControl(new BMap.OverviewMapControl());  
+   
+    //alert(longitude);
+    //alert(latitude);
+    //alert("xxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxxxxxxxxxxxx---3");
+
+	//var gpsPoint = new BMap.Point(longitude, latitude);               // 初始化地图，设置中心点坐标和地图级别  
+	BMap.Convertor.translate(gpsPoint,0,function (point)
+	{
+//		 alert("translateCallback");
+//		 var point = new BMap.Point(longitude, latitude);
+
+        
+
+ var sContent =
+	"<div style='width:200px'><h4 style='margin:0 0 5px 0'>"+licenseNumber+"</h4>"
+	+"<hr/>"
+	+"定位时间："+time+"</br>"
+	+"位置："+address_num+"</div>";
+
+	
+var iconImg = createIcon();
+var marker = new BMap.Marker(point,{icon:iconImg});
+var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+marker.addEventListener("click", function(){
+   this.openInfoWindow(infoWindow);
+   //图片加载完毕重绘infowindow
+   document.getElementById('imgDemo').onload = function (){
+       infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+   }
+});
+map.centerAndZoom(point, 15);
+map.addOverlay(marker);
+var s="";
+if(ign==1){
+	s="运行";
+}
+else{
+	s="熄火";
+}
+
+var tmp="车牌号："+licenseNumber +"&nbsp;引擎状态："+s;
+    tmp+="</br>引擎转速："+engineRPM+"RPM"+"&nbsp;速度："+speed+"KM/H" ;
+    tmp+="</br>剩余油量："+fuel_level_now+"%"+"&nbsp;电压："+batt_level+"V";
+    
+  
+function ZoomControl(){
+	  // 默认停靠位置和偏移量
+	  this.defaultAnchor = BMAP_ANCHOR_TOP_RIGHT;
+	  this.defaultOffset = new BMap.Size(10, 5);
+	}
+
+	//通过JavaScript的prototype属性继承于BMap.Control
+	ZoomControl.prototype = new BMap.Control();
+
+	// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
+	// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
+	ZoomControl.prototype.initialize = function(map){
+	  // 创建一个DOM元素
+	  var div = document.createElement("div");
+	  div.style.background="red";
+	  div.innerHTML =tmp+"</div>";
+	  // 设置样式
+	  div.style.cursor = "pointer";
+	  div.style.border = "1px solid gray";
+	  div.style.backgroundColor = "white";
+	  // 添加DOM元素到地图中
+	  map.getContainer().appendChild(div);
+	  // 将DOM元素返回
+	  return div;
+	}
+	// 创建控件
+	var myZoomCtrl = new ZoomControl();
+	// 添加到地图当中
+
+	map.addControl(myZoomCtrl);
+	 });
+
+  }
+
+
+  function createIcon(){
+    var icon = new BMap.Icon("http://180.166.124.142:9983/obd_web/mapPic/car.png", new BMap.Size(150,78));
+    return icon;
+}
+  
+</script>  
+</body>  
+</html>
