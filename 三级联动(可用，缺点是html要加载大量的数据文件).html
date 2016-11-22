@@ -1,0 +1,91 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>javascript简单三级联动效果</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+</head>
+<script>
+    var oProc=new Array("四川省","湖南省","广东省");//随意选择三个省，如需更多，添加便是
+    var oCity=new Array();//创建一个数组，用以存放市选择项
+    oCity[0]=new Array("成都市","绵阳市","达州市");
+    oCity[1]=new Array("长沙市","常德市","湘潭市");
+    oCity[2]=new Array("广州市","深圳市","珠海市");
+    var oDist=new Array();//创建一个数组，用于存放市级以下的各个区县
+    oDist[0]=new Array();//这是必须声明的一项，否则会报异常
+    oDist[1]=new Array();
+    oDist[2]=new Array();
+    oDist[0][0]=new Array("武侯区","锦江区","金牛区");
+    oDist[0][1]=new Array("梓潼县","安县","罗江县");
+    oDist[0][2]=new Array("达县","通川县","宣汉县");
+    oDist[1][0]=new Array("长沙区","开福区","芙蓉区");
+    oDist[1][1]=new Array("武陵区","鼎城区","汉寿县");
+    oDist[1][2]=new Array("湘潭县","雨湖区","岳塘区");
+    oDist[2][0]=new Array("白云区","天河区","黄埔区");
+    oDist[2][1]=new Array("罗湖区","宝安区","福田区");
+    oDist[2][2]=new Array("香洲区","金湾区","斗门区");
+    //加载完成时，执行
+    function showLoad(){
+        var oproc=document.getElementById("proc");
+        for(var i=0;i<oProc.length;i++){
+            var oOpt=document.createElement("option");
+            var oTxt=document.createTextNode(oProc[i]);
+            oOpt.appendChild(oTxt);
+            oproc.appendChild(oOpt);
+        }
+    }
+    //当“proc”发生change事件时，执行
+    function showCity(){
+        var oproc=document.getElementById("proc");
+        var ocity=document.getElementById("city");
+        var odist=document.getElementById("dist");
+        if(oproc.value=="-1"){//判断，当未选择时。将市级，区级中的内容清空
+            ocity.options.length=1;
+            odist.options.length=1;
+        }else{
+            ocity.options.length=1;
+            odist.options.length=1;
+            var num=oproc.options.selectedIndex;
+            for(var i=0;i<oCity[num-1].length;i++){//循环加入数据
+                var oOpt=document.createElement("option");
+                var oTxt=document.createTextNode(oCity[num-1][i]);
+                oOpt.appendChild(oTxt);
+                ocity.appendChild(oOpt);
+            }
+        }
+
+    }
+    //当“city”发生change事件时，执行
+    function showDist(){
+        var oproc=document.getElementById("proc");
+        var ocity=document.getElementById("city");
+        var odist=document.getElementById("dist");
+        if(ocity.value=="-1"){//判断，当未选择时。将区级中的内容清空
+            odist.options.length=1;
+        }else{
+            odist.options.length=1;
+            var numPro=oproc.options.selectedIndex;
+            var numCity=ocity.options.selectedIndex;
+            for(var i=0;i<oDist[numPro-1][numCity-1].length;i++){
+                var oOpt=document.createElement("option");//创建一个option元素节点
+                var oTxt=document.createTextNode(oDist[numPro-1][numCity-1][i]);//创建一个文本节点
+                oOpt.appendChild(oTxt);//将文本节点加入到oOpt元素节点中
+                odist.appendChild(oOpt);//将oOpt元素节点添加到odist中
+            }
+        }
+    }
+</script>
+<body onload="showLoad()"><!-- 页面加载完成时，初始化省选择项 -->
+<div>
+    请选择地区：
+    <select id="proc" onchange="showCity()">
+        <option value="-1">--请选择省--</option>
+    </select>
+    <select id="city" onchange="showDist()" >
+        <option value="-1">--请选择市--</option>
+    </select>
+    <select id="dist">
+        <option value="-1">--请选择区--</option>
+    </select>
+</div>
+</body>
+</html>
