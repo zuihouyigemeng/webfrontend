@@ -1,0 +1,57 @@
+ <!DOCTYPE html>
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <link rel="stylesheet" type="text/css" href="jquery-easyui-1.4.4/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="jquery-easyui-1.4.4/themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="jquery-easyui-1.4.4/themes/color.css">
+		<script type="text/javascript" src="jquery-easyui-1.4.4/jquery.min.js"></script>
+		<script type="text/javascript" src="jquery-easyui-1.4.4/jquery.easyui.min.js"></script>
+
+        <script type="text/javascript">
+            $(function(){
+			
+
+	$('#cc').combobox({
+					prompt:'输入关键字后自动搜索',
+					required:true,
+					mode:'remote',
+					url:'getData.php',
+					editable:true,
+					valueField:'stcm_car_license',    
+					textField:'stcm_car_license',
+					hasDownArrow:false,
+					onBeforeLoad: function(param){
+						if(param == null || param.q == null || param.q.replace(/ /g, '') == ''){
+							var value = $(this).combobox('getValue');
+							if(value){// 修改的时候才会出现q为空而value不为空
+								param.id = value;
+								
+								return true;
+							}
+							return false;
+						}
+					}
+				}); 
+});
+
+/*		
+				$('#cc').combobox({
+									hasDownArrow:false,
+
+					filter: function(q, row){
+						var opts = $(this).combobox('options');
+						return row[opts.textField].indexOf(q) == 0;
+					}
+				});
+            });
+*/
+        </script>
+    </head>
+    <body>
+	    <select class="easyui-combobox" id="cc" name="cc" data-options="editable:false,panelHeight:'auto'" style="width:160px;">   
+
+		</select>
+    </body>
+</html>
